@@ -7,7 +7,7 @@ This project is a Web API to enable the registration of CVs online, without usin
 
 
 ## Class Diagram
-![Diagrama Curriculum](https://github.com/user-attachments/assets/6d92b8d1-16b5-46e5-8709-f33954a80188)
+![Diagrama Curriculum](https://github.com/user-attachments/assets/35145d92-591d-40fe-a2c6-8da6ef428c50)
 
 # Technologies
 ## Back end
