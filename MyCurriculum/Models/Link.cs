@@ -11,6 +11,7 @@ namespace MyCurriculum.Models
         public int LinkId { get; set; }
 
         [Column("url")]
+        [StringLength(300)]
         public string? URL { get; set; }
 
         [Column("curriculum_id")]

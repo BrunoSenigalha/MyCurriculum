@@ -14,9 +14,19 @@ namespace MyCurriculum
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            string mySqlConnection = builder.Configuration.GetConnectionString("MainConnection");
+            //string mySqlConnection = builder.Configuration.GetConnectionString("MainConnection");
+            //builder.Services.AddDbContext<EntitiesContext>(options =>
+            //    options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
+
+            string? MainConnection = builder.Configuration.GetConnectionString("MainConnection");
+
+            if (string.IsNullOrEmpty(MainConnection))
+            {
+                throw new InvalidOperationException("MainConnection string is not configured.");
+            }
+
             builder.Services.AddDbContext<EntitiesContext>(options =>
-                options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
+                options.UseSqlServer(MainConnection));
 
             builder.Services.AddControllers().AddJsonOptions(options =>
                 options.JsonSerializerOptions
@@ -34,6 +44,9 @@ namespace MyCurriculum
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication("Bearer").AddJwtBearer();
 
             var app = builder.Build();
 

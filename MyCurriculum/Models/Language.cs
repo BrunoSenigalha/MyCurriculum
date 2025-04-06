@@ -11,7 +11,9 @@ namespace MyCurriculum.Models
         [Column("id")]
         public int Id { get; set; }
 
+        [Required]
         [Column("language")]
+        [StringLength(50)]
         public string? LanguageName { get; set; }
 
         [Column("conversation_level")]

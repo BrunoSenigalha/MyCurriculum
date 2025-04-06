@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ namespace MyCurriculum.Controllers
         private readonly CurriculumRepository _curriculumService = curriculumService;
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Curriculum>>> GetCurriculumAsync()
         {
             var curriculums = await _curriculumService.GetAll();

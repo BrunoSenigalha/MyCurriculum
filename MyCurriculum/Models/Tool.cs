@@ -12,6 +12,7 @@ namespace MyCurriculum.Models
         public int Id { get; set; }
 
         [Column("tool_name")]
+        [StringLength(80)]
         public string? ToolName { get; set; }
 
         [Column("curriculum_id")]
@@ -19,8 +20,8 @@ namespace MyCurriculum.Models
 
         public ICollection<ProjectTool>? ProjectTool { get; set; }
 
-        [JsonIgnore]
-        public ICollection<Project>? Projects { get; set; }
+        //[JsonIgnore]
+        //public ICollection<Project>? Projects { get; set; }
 
     }
 }

@@ -16,30 +16,35 @@ namespace MyCurriculum.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         [Column("picture")]
+        [StringLength(100)]
         public byte[]? Picture { get; set; }
 
         [Required]
         [Column("name")]
+        [StringLength(100)]
         public string? Name { get; set; }
 
-        [Required]
-        [Column("gender")]
+        [Column("genders")]
         public Gender Gender { get; set; }
 
         [Required]
         [Column("professional_goals")]
+        [StringLength(100)]
         public string? ProfessionalGoals { get; set; }
 
         [Required]
         [Column("phone")]
+        [StringLength(15)]
         public string? Phone { get; set; }
 
         [Required]
         [Column("email")]
+        [StringLength(100)]
         public string? Email { get; set; }
 
         [Required]
         [Column("linkedIn")]
+        [StringLength(150)]
         public string? LinkedIn { get; set; }
 
         [Required]
@@ -64,6 +69,6 @@ namespace MyCurriculum.Models
         public ICollection<Course>? Courses { get; set; }
 
         [JsonIgnore]
-        public ICollection<AcademicExperience>? Formacaos { get; set; }
+        public ICollection<AcademicExperience>? AcademicExperiences { get; set; }
     }
 }

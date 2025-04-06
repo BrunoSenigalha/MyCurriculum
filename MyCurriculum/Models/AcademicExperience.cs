@@ -12,9 +12,12 @@ namespace MyCurriculum.Models
         public int Id { get; set; }
 
         [Column("course_name")]
+        [Required(ErrorMessage = "Campo Obrigatorio")]
+        [StringLength(150)]
         public string? CourseName { get; set; }
 
         [Column("institution")]
+        [StringLength(200)]
         public string? Institution { get; set; }
 
         [Column("degree")]

@@ -12,18 +12,22 @@ namespace MyCurriculum.Models
 
         [Required]
         [Column("zip_code")]
+        [StringLength(10)]
         public string? ZipCode { get; set; }
 
         [Required]
         [Column("city")]
+        [StringLength(100)]
         public string? City {  get; set; }
 
         [Required]
         [Column("state")]
+        [StringLength(50)]
         public string? State { get; set; }
 
         [Required]
         [Column("country")]
+        [StringLength(100)]
         public string? Country { get; set; }
 
         [Column("curriculum_id")]

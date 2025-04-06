@@ -11,15 +11,18 @@ namespace MyCurriculum.Models
         public int Id { get; set; }
 
         [Column("company")]
+        [StringLength(100)]
         public string? Company { get; set; }
 
         [Column("position")]
+        [StringLength(100)]
         public string? Position { get; set; }
 
         [Column("actual_job")]
         public bool ActualJob { get; set; }
 
         [Column("description")]
+        [StringLength(500)]
         public string? Description { get; set; }
 
         [Column("start_date")]

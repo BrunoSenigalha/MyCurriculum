@@ -13,12 +13,14 @@ namespace MyCurriculum.Models
         [Column("id")]
         public int Id { get; set; }
 
-        [Column("types_courses_id")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public int TypeId { get; set; }
+        [Column("title")]
+        [Required]
+        [StringLength(100)]
+        public string? Title { get; set; }
 
         [Column("description")]
         [Required]
+        [StringLength(500)]
         public string? Description { get; set; }
 
         public TypeCourse? TypeCourse { get; set; }
