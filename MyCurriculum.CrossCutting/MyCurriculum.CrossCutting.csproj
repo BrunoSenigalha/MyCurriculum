@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="IoC\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyCurriculum.Application\MyCurriculum.Application.csproj" />
+    <ProjectReference Include="..\MyCurriculum.Domain\MyCurriculum.Domain.csproj" />
+    <ProjectReference Include="..\MyCurriculum.Infraestructure\MyCurriculum.Infraestructure.csproj" />
+  </ItemGroup>
+
+</Project>

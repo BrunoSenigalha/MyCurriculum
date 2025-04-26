@@ -9,9 +9,9 @@ namespace MyCurriculum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProfessionalExpController(ProfessionalExpRepository professionalExp) : ControllerBase
+    public class ProfessionalExpController(ProfessionalExpService professionalExp) : ControllerBase
     {
-        private readonly ProfessionalExpRepository _professionalExp = professionalExp;
+        private readonly ProfessionalExpService _professionalExp = professionalExp;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProfessionalExp>>> GetProfessionalExpAsync()

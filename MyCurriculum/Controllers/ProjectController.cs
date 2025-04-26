@@ -7,9 +7,9 @@ namespace MyCurriculum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjectController(ProjectRepository projectService) : ControllerBase
+    public class ProjectController(ProjectService projectService) : ControllerBase
     {
-        private readonly ProjectRepository _projectService = projectService;
+        private readonly ProjectService _projectService = projectService;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjectsAsync()

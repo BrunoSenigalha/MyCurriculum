@@ -1,8 +1,10 @@
 
 using Microsoft.EntityFrameworkCore;
+using MyCurriculum.Domain.Entities;
 using MyCurriculum.Entities;
+using MyCurriculum.Infraestructure.Repositories;
+using MyCurriculum.Infraestructure.Repositories.Interfaces;
 using MyCurriculum.Repositories;
-using MyCurriculum.Repositories.Interfaces;
 using System.Text.Json.Serialization;
 
 namespace MyCurriculum
@@ -32,13 +34,18 @@ namespace MyCurriculum
                 options.JsonSerializerOptions
                 .ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-            builder.Services.AddScoped<CurriculumRepository>();
-            builder.Services.AddScoped<LinkRepository>();
-            builder.Services.AddScoped<ProfessionalExpRepository>();
-            builder.Services.AddScoped<CourseRepository>();
-            builder.Services.AddScoped<ToolRepository>();
-            builder.Services.AddScoped<LanguageRepository>();
-            builder.Services.AddScoped<ProjectRepository>();
+            builder.Services.AddScoped<ICurriculumRepository, CurriculumRepository>();
+            builder.Services.AddScoped<IAcademicExperienceRepository, AcademicExperienceRepository>();
+            builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+            builder.Services.AddScoped<ILanguageRepository, LanguageRepository>();
+            builder.Services.AddScoped<ILinkRepository, LinkRepository>();
+            builder.Services.AddScoped<IProfessionalExpRepository, ProfessionalExpRepository>();
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+            builder.Services.AddScoped<IToolRepository, ToolRepository>();
+            builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            
+
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

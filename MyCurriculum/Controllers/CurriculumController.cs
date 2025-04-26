@@ -10,15 +10,16 @@ using MyCurriculum.Entities;
 using MyCurriculum.Models;
 using MyCurriculum.Repositories;
 using MyCurriculum.Repositories.Interfaces;
+using MyCurriculum.Services;
 
 namespace MyCurriculum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
 
-    public class CurriculumController(CurriculumRepository curriculumService) : ControllerBase
+    public class CurriculumController(CurriculumService curriculumService) : ControllerBase
     {
-        private readonly CurriculumRepository _curriculumService = curriculumService;
+        private readonly CurriculumService _curriculumService = curriculumService;
 
         [HttpGet]
         [Authorize]

@@ -1,8 +1,6 @@
-﻿using MyCurriculum.Models;
-
-namespace MyCurriculum.Repositories.Interfaces
+﻿namespace MyCurriculum.Services.Interfaces
 {
-    public interface IRepository<T> where T : class
+    public interface IService<T> where T : class
     {
         Task<IEnumerable<T>> GetAll();
         Task<T> GetById(int id);

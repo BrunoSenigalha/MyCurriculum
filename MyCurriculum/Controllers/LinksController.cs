@@ -4,14 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using MyCurriculum.Entities;
 using MyCurriculum.Models;
 using MyCurriculum.Repositories;
+using MyCurriculum.Services;
 
 namespace MyCurriculum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LinksController(LinkRepository linkService) : ControllerBase
+    public class LinksController(LinkService linkService) : ControllerBase
     {
-        private readonly LinkRepository _linkService = linkService;
+        private readonly LinkService _linkService = linkService;
 
         [HttpGet]
         public async Task<ActionResult<ICollection<Link>>> GetLinksAsync()

@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyCurriculum.Models;
 using MyCurriculum.Repositories;
+using MyCurriculum.Services;
 
 namespace MyCurriculum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CourseController(CourseRepository courseService) : ControllerBase
+    public class CourseController(CourseService courseService) : ControllerBase
     {
-        private readonly CourseRepository _courseService = courseService;
+        private readonly CourseService _courseService = courseService;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Course>>> GetCourseAsync()

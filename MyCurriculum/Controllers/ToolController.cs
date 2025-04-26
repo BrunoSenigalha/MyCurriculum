@@ -7,9 +7,9 @@ namespace MyCurriculum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ToolController(ToolRepository toolService) : ControllerBase
+    public class ToolController(ToolService toolService) : ControllerBase
     {
-        private readonly ToolRepository _toolService = toolService;
+        private readonly ToolService _toolService = toolService;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tool>>> GetToolsAsync()

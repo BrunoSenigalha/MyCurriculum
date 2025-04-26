@@ -14,7 +14,7 @@ namespace MyCurriculum.Entities
         public DbSet<ProfessionalExp> ProfessionalExp { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Language> Languages { get; set; }
-        public DbSet<AcademicExperience> Formations { get; set; }
+        public DbSet<AcademicExperience> AcademicExperiences { get; set; }
 
         // Para definir a chave composta
         protected override void OnModelCreating(ModelBuilder modelBuilder)

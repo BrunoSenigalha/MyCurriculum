@@ -25,7 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\MyCurriculum.CrossCutting\MyCurriculum.CrossCutting.csproj" />
+    <ProjectReference Include="..\MyCurriculum.Domain\MyCurriculum.Domain.csproj" />
+    <ProjectReference Include="..\MyCurriculum.Infraestructure\MyCurriculum.Infraestructure.csproj" />
+    <ProjectReference Include="..\MyCurriculumTests\MyCurriculumTests.csproj" />
   </ItemGroup>
 
 </Project>

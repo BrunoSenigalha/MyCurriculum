@@ -2,14 +2,15 @@
 using Microsoft.AspNetCore.Mvc;
 using MyCurriculum.Models;
 using MyCurriculum.Repositories;
+using MyCurriculum.Services;
 
 namespace MyCurriculum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LanguageController(LanguageRepository languageService) : ControllerBase
+    public class LanguageController(LanguageService languageService) : ControllerBase
     {
-        private readonly LanguageRepository _languageService = languageService;
+        private readonly LanguageService _languageService = languageService;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Language>>> GetLanguageAsync()
