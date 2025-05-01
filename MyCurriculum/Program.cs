@@ -1,7 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using MyCurriculum.Domain.Entities;
-using MyCurriculum.Entities;
+using MyCurriculum.Infraestructure.Context;
 using MyCurriculum.Infraestructure.Repositories;
 using MyCurriculum.Infraestructure.Repositories.Interfaces;
 using System.Text.Json.Serialization;
@@ -15,10 +15,6 @@ namespace MyCurriculum
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            //string mySqlConnection = builder.Configuration.GetConnectionString("MainConnection");
-            //builder.Services.AddDbContext<EntitiesContext>(options =>
-            //    options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
-
             string? MainConnection = builder.Configuration.GetConnectionString("MainConnection");
 
             if (string.IsNullOrEmpty(MainConnection))
@@ -45,15 +41,11 @@ namespace MyCurriculum
             builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
-
-
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddAuthorization();
-            builder.Services.AddAuthentication("Bearer").AddJwtBearer();
 
             var app = builder.Build();
 
@@ -67,7 +59,6 @@ namespace MyCurriculum
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

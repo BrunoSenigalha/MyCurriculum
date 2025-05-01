@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using MyCurriculum.Domain.Entities;
-using MyCurriculum.Entities;
 using MyCurriculum.Infraestructure.Repositories.Interfaces;
 using MyCurriculum.Models;
 using MyCurriculum.Services;

@@ -58,4 +58,5 @@ namespace MyCurriculum.Controllers
             _unitOfWork.Commit();
             return Ok(deletedTool);
         }
+    }
 }

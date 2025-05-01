@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyCurriculum.Domain.Entities;
-using MyCurriculum.Entities;
 using MyCurriculum.Infraestructure.Repositories.Interfaces;
 using MyCurriculum.Models;
 

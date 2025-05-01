@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using MyCurriculum.Domain.Entities;
-using MyCurriculum.Entities;
 using MyCurriculum.Infraestructure.Repositories.Interfaces;
 using MyCurriculum.Services;
 
