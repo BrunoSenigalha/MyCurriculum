@@ -8,8 +8,8 @@ namespace MyCurriculum.Infraestructure.Repositories.Interfaces
         Task<IEnumerable<T>> GetAll();
 
         T? Get(Expression<Func<T, bool>> predicate);
-        Task<T> Create(T entity);
-        Task<T> Update(int id, T entity);
+        T Create(T entity);
+        T Update(T entity);
         T Delete(T entity);
     }
 }

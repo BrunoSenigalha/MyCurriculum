@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyCurriculum.Models;
+﻿using MyCurriculum.Domain.Entities;
 using MyCurriculum.Infraestructure.Context;
-using MyCurriculum.Infraestructure.Repositories.Interfaces;
-using MyCurriculum.Infraestructure.Repositories;
-using MyCurriculum.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace MyCurriculum.Repositories
+namespace MyCurriculum.Infraestructure.Repositories.Interfaces
 {
     public class CourseRepository : BaseRepository<Course>, ICourseRepository
     {

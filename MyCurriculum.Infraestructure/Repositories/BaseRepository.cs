@@ -16,7 +16,7 @@ namespace MyCurriculum.Infraestructure.Repositories
 
         public async Task<IEnumerable<T>> GetAll()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _context.Set<T>().AsNoTracking().ToListAsync();
         }
 
         public T? Get(Expression<Func<T, bool>> predicate)
@@ -24,24 +24,25 @@ namespace MyCurriculum.Infraestructure.Repositories
             return _context.Set<T>().FirstOrDefault(predicate);
         }
 
-        public async Task<T> Create(T entity)
+        public T Create(T entity)
         {
             _context.Set<T>().Add(entity);
-            await _context.SaveChangesAsync();
-            return entity;
+            //await _context.SaveChangesAsync();
+            return entity;     
         }
 
-        public async Task<T> Update(int id, T entity)
+        public T Update(T entity)
         {
+            
             _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
             return entity;
         }
 
         public T Delete(T entity)
         {
             _context.Set<T>().Remove(entity);
-            _context.SaveChanges();
+            //_context.SaveChanges();
             return entity;
         }
     }

@@ -4,7 +4,6 @@ using MyCurriculum.Domain.Entities;
 using MyCurriculum.Entities;
 using MyCurriculum.Infraestructure.Repositories;
 using MyCurriculum.Infraestructure.Repositories.Interfaces;
-using MyCurriculum.Repositories;
 using System.Text.Json.Serialization;
 
 namespace MyCurriculum
@@ -44,7 +43,8 @@ namespace MyCurriculum
             builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
             builder.Services.AddScoped<IToolRepository, ToolRepository>();
             builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-            
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 
 

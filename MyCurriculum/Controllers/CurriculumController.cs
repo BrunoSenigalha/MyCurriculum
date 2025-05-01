@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using MyCurriculum.Domain.Entities;
 using MyCurriculum.Entities;
-using MyCurriculum.Models;
-using MyCurriculum.Repositories;
-using MyCurriculum.Repositories.Interfaces;
+using MyCurriculum.Infraestructure.Repositories.Interfaces;
 using MyCurriculum.Services;
 
 namespace MyCurriculum.Controllers
@@ -17,43 +17,62 @@ namespace MyCurriculum.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class CurriculumController(CurriculumService curriculumService) : ControllerBase
+    public class CurriculumController : ControllerBase
     {
-        private readonly CurriculumService _curriculumService = curriculumService;
+        //private readonly IBaseRepository<Curriculum> _repository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public CurriculumController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<IEnumerable<Curriculum>>> GetCurriculumAsync()
         {
-            var curriculums = await _curriculumService.GetAll();
+            var curriculums = await _unitOfWork.CurriculumRepository.GetAll();
             return Ok(curriculums);
         }
 
         [HttpGet("{id:int:min(1)}", Name = "GetCurriculum")]
-        public async Task<ActionResult<Curriculum>> GetCurriculumAsync(int id)
+        public ActionResult<Curriculum> GetCurriculum(int id)
         {
-            var curriculum = await _curriculumService.GetById(id);
-            return Ok(curriculum);
+            var curriculum = _unitOfWork.CurriculumRepository.Get(c => c.CurriculumId == id);
+            return curriculum == null ? throw new Exception("ID não encontrado") : (ActionResult<Curriculum>)Ok(curriculum);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Curriculum>> PostCurriculumAsync(Curriculum postedCurriculum)
+        public ActionResult<Curriculum> PostCurriculum(Curriculum postedCurriculum)
         {
-            var curriculum = await _curriculumService.Create(postedCurriculum);
-            return Ok(curriculum);
+            var curriculum = _unitOfWork.CurriculumRepository.Create(postedCurriculum);
+            _unitOfWork.Commit();
+            return curriculum != null ? (ActionResult<Curriculum>)Ok(curriculum) : throw new ArgumentNullException("Erro ao tentar salvar a entidade.");
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<ActionResult> PutCurriculumAsync(int id, Curriculum modifiedCurriculum)
+        public ActionResult<Curriculum> PutCurriculum(int id, Curriculum modifiedCurriculum)
         {
-            var curriculum = await _curriculumService.Update(id, modifiedCurriculum);
+            if (id != modifiedCurriculum.CurriculumId)
+            {
+                return BadRequest("ID não encontrado");
+            }
+
+            var curriculum = _unitOfWork.CurriculumRepository.Update(modifiedCurriculum);
+            _unitOfWork.Commit();
             return Ok(curriculum);
         }
 
         [HttpDelete("{id:int:min(1)}")]
-        public async Task<ActionResult> DeleteCurriculumAsync(int id)
+        public ActionResult<Curriculum> DeleteCurriculum(int id)
         {
-            var curriculum = await _curriculumService.Delete(id);
+            var curriculum = _unitOfWork.CourseRepository.Get(c => c.CurriculumId == id);
+            if (curriculum is null)
+            {
+                return BadRequest("ID não encontrado");
+            }
+            _unitOfWork.CourseRepository.Delete(curriculum);
+            _unitOfWork.Commit();
             return Ok(curriculum);
         }
     }
