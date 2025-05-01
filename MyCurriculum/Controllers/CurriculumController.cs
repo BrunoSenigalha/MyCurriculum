@@ -28,7 +28,7 @@ namespace MyCurriculum.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<IEnumerable<Curriculum>>> GetCurriculumAsync()
         {
             var curriculums = await _unitOfWork.CurriculumRepository.GetAll();

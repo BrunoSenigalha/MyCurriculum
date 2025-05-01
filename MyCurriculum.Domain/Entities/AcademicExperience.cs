@@ -9,7 +9,7 @@ namespace MyCurriculum.Domain.Entities
     {
         [Key]
         [Column("id")]
-        public int Id { get; set; }
+        public int AcademicExpId { get; set; }
 
         [Column("course_name")]
         [Required(ErrorMessage = "Campo Obrigatorio")]

@@ -1,50 +1,67 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyCurriculum.Domain.Entities;
+using MyCurriculum.Infraestructure.Repositories.Interfaces;
 using MyCurriculum.Models;
-using MyCurriculum.Repositories;
 using MyCurriculum.Services;
 
 namespace MyCurriculum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CourseController(CourseService courseService) : ControllerBase
+    public class CourseController : ControllerBase
     {
-        private readonly CourseService _courseService = courseService;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public CourseController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Course>>> GetCourseAsync()
         {
-            var courses = await _courseService.GetAll();
+            var courses = await _unitOfWork.CourseRepository.GetAll();
             return Ok(courses);
         }
 
         [HttpGet("{id:int:min(1)}", Name = "GetCourse")]
-        public async Task<ActionResult<Course>> GetCourseAsync(int id)
+        public ActionResult<Course> GetCourse(int id)
         {
-            var course = await _courseService.GetById(id);
-            return Ok(course);
+            var course = _unitOfWork.CourseRepository.Get(c => c.CourseId == id);
+            return course == null ? throw new Exception("ID not found") : (ActionResult<Course>)Ok(course);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Course>> PostCourseAsync(Course postedCourse)
+        public ActionResult<Course> PostCourse(Course postedCourse)
         {
-            var course = await _courseService.Create(postedCourse);
-            return Ok(course);
+            var course = _unitOfWork.CourseRepository.Create(postedCourse);
+            _unitOfWork.Commit();
+            return course != null ? (ActionResult<Course>)Ok(course) : throw new ArgumentNullException("Erro ao tentar salvar a entidade.");
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<ActionResult> PutCourseAsync(int id, Course modifiedCurse)
+        public ActionResult<Course> PutCourse(int id, Course modifiedCourse)
         {
-            var course = await _courseService.Update(id, modifiedCurse);
+            if (id != modifiedCourse.CourseId)
+            {
+                return BadRequest("ID not found");
+            }
+            var course = _unitOfWork.CourseRepository.Update(modifiedCourse);
+            _unitOfWork.Commit();
             return Ok(course);
         }
 
         [HttpDelete("{id:int:min(1)}")]
-        public async Task<ActionResult> DeleteCourseAsync(int id)
+        public ActionResult<Course> DeleteCourse(int id)
         {
-            var course = await _courseService.Delete(id);
+            var course = _unitOfWork.CourseRepository.Get(c => c.CourseId == id);
+            if (course == null)
+            {
+                return NotFound("Course not found");
+            }
+            _unitOfWork.CourseRepository.Delete(course);
+            _unitOfWork.Commit();
             return Ok(course);
         }
-
     }
 }

@@ -9,7 +9,7 @@ namespace MyCurriculum.Domain.Entities
     {
         [Key]
         [Column("id")]
-        public int Id { get; set; }
+        public int ToolId { get; set; }
 
         [Column("tool_name")]
         [StringLength(80)]

@@ -1,49 +1,67 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MyCurriculum.Models;
-using MyCurriculum.Repositories;
+using MyCurriculum.Domain.Entities;
+using MyCurriculum.Infraestructure.Repositories.Interfaces;
+
 
 namespace MyCurriculum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjectController(ProjectService projectService) : ControllerBase
+    public class ProjectController : ControllerBase
     {
-        private readonly ProjectService _projectService = projectService;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public ProjectController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Project>>> GetProjectsAsync()
+        public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
-            var projects = await _projectService.GetAll();
+            var projects = await _unitOfWork.ProjectRepository.GetAll();
             return Ok(projects);
         }
 
         [HttpGet("{id:int:min(1)}", Name = "GetProject")]
-        public async Task<ActionResult<Project>> GetProjectAsync(int id)
+        public ActionResult<Project> GetProject(int id)
         {
-            var project = await _projectService.GetById(id);
-            return Ok(project);
+            var project = _unitOfWork.ProjectRepository.Get(p => p.ProjectId == id);
+            return project == null ? throw new Exception("ID not found") : (ActionResult<Project>)Ok(project);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Project>> PostProjectAsync(Project postedProject)
+        public ActionResult<Project> PostProject(Project postedProject)
         {
-            var project = await _projectService.Create(postedProject);
-            return Ok(project);
+            var project = _unitOfWork.ProjectRepository.Create(postedProject);
+            _unitOfWork.Commit();
+            return project != null ? (ActionResult<Project>)Ok(project) : throw new ArgumentNullException("Error when trying to save the entity.");
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<ActionResult<Project>> PutProjectAsync(int id, Project modifiedProject)
+        public ActionResult<Project> PutProject(int id, Project modifiedProject)
         {
-            var project = await _projectService.Update(id, modifiedProject);
-            return Ok(project);
+            if (id != modifiedProject.ProjectId)
+            {
+                return BadRequest("ID not found");
+            }
+            var project = _unitOfWork.ProjectRepository.Update(modifiedProject);
+            _unitOfWork.Commit();
+            return project != null ? (ActionResult<Project>)Ok(project) : throw new ArgumentNullException("Error when trying to save the entity.");
         }
 
         [HttpDelete("{id:int:min(1)}")]
-        public async Task<ActionResult<Project>> DeleteProjectAsync(int id) 
+        public ActionResult<Project> DeleteProject(int id)
         {
-            var project = await _projectService.Delete(id);
-            return Ok(project);
+            var project = _unitOfWork.ProjectRepository.Get(p => p.ProjectId == id);
+            if (project == null)
+            {
+                return NotFound("ID not found");
+            }
+            var deletedProject = _unitOfWork.ProjectRepository.Delete(project);
+            _unitOfWork.Commit();
+            return Ok(deletedProject);
         }
     }
 }

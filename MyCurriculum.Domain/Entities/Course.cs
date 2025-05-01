@@ -11,7 +11,7 @@ namespace MyCurriculum.Domain.Entities
     {
         [Key]
         [Column("id")]
-        public int Id { get; set; }
+        public int CourseId { get; set; }
 
         [Column("title")]
         [Required]

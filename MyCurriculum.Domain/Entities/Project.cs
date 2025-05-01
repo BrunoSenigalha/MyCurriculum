@@ -9,7 +9,7 @@ namespace MyCurriculum.Domain.Entities
     {
         [Key]
         [Column("id")]
-        public int Id { get; set; }
+        public int ProjectId { get; set; }
 
         [Required]
         [Column("project_name")]

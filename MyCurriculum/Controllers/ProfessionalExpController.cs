@@ -1,50 +1,68 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MyCurriculum.Domain.Entities;
 using MyCurriculum.Entities;
+using MyCurriculum.Infraestructure.Repositories.Interfaces;
 using MyCurriculum.Models;
-using MyCurriculum.Repositories;
 
 namespace MyCurriculum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProfessionalExpController(ProfessionalExpService professionalExp) : ControllerBase
+    public class ProfessionalExpController : ControllerBase
     {
-        private readonly ProfessionalExpService _professionalExp = professionalExp;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public ProfessionalExpController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProfessionalExp>>> GetProfessionalExpAsync()
+        public async Task<ActionResult<IEnumerable<ProfessionalExp>>> GetProfessionalExps()
         {
-            var professionalExp = await _professionalExp.GetAll();
-            return Ok(professionalExp);
+            var professionalExps = await _unitOfWork.ProfessionalExpRepository.GetAll();
+            return Ok(professionalExps);
         }
 
         [HttpGet("{id:int:min(1)}", Name = "GetProfessionalExp")]
-        public async Task<ActionResult<ProfessionalExp>> GetProfessionalExpAsync(int id)
+        public ActionResult<ProfessionalExp> GetProfessionalExp(int id)
         {
-            var professionalExp = await _professionalExp.GetById(id);
-            return Ok(professionalExp);
+            var professionalExp = _unitOfWork.ProfessionalExpRepository.Get(pe => pe.ProfessionalExpId == id);
+            return professionalExp == null ? throw new Exception("ID not found") : (ActionResult<ProfessionalExp>)Ok(professionalExp);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProfessionalExp>> PostProfessionalExpAsync(ProfessionalExp postedProfessionalExp)
+        public ActionResult<ProfessionalExp> PostProfessionalExp(ProfessionalExp postedProfessionalExp)
         {
-            var professionalExp = await _professionalExp.Create(postedProfessionalExp);
-            return Ok(professionalExp);
+            var professionalExp = _unitOfWork.ProfessionalExpRepository.Create(postedProfessionalExp);
+            _unitOfWork.Commit();
+            return professionalExp != null ? (ActionResult<ProfessionalExp>)Ok(professionalExp) : throw new ArgumentNullException("Error when trying to save the entity.");
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<ActionResult> PutProfessionalExpAsync(int id, ProfessionalExp modifiedProfessionalExp)
+        public ActionResult<ProfessionalExp> PutProfessionalExp(int id, ProfessionalExp modifiedProfessionalExp)
         {
-            var professionalExp = await _professionalExp.Update(id, modifiedProfessionalExp);
-            return Ok(professionalExp);
+            if (id != modifiedProfessionalExp.ProfessionalExpId)
+            {
+                return BadRequest("ID not found");
+            }
+            var professionalExp = _unitOfWork.ProfessionalExpRepository.Update(modifiedProfessionalExp);
+            _unitOfWork.Commit();
+            return professionalExp != null ? (ActionResult<ProfessionalExp>)Ok(professionalExp) : throw new ArgumentNullException("Error when trying to save the entity.");
         }
 
         [HttpDelete("{id:int:min(1)}")]
-        public async Task<ActionResult> DeleteProfessionalExpAsync(int id)
+        public ActionResult<ProfessionalExp> DeleteProfessionalExp(int id)
         {
-            var professionalExp = await _professionalExp.Delete(id);
+            var professionalExp = _unitOfWork.ProfessionalExpRepository.Get(pe => pe.ProfessionalExpId == id);
+            if (professionalExp == null)
+            {
+                return NotFound("ID not found");
+            }
+            _unitOfWork.ProfessionalExpRepository.Delete(professionalExp);
+            _unitOfWork.Commit();
             return Ok(professionalExp);
         }
     }

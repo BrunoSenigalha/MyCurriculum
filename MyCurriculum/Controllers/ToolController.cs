@@ -1,49 +1,61 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyCurriculum.Domain.Entities;
+using MyCurriculum.Infraestructure.Repositories.Interfaces;
 using MyCurriculum.Models;
-using MyCurriculum.Repositories;
 
 namespace MyCurriculum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ToolController(ToolService toolService) : ControllerBase
+    public class ToolController(IUnitOfWork unitOfWork) : ControllerBase
     {
-        private readonly ToolService _toolService = toolService;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tool>>> GetToolsAsync()
+        public async Task<ActionResult<IEnumerable<Tool>>> GetTools()
         {
-            var tools = await _toolService.GetAll();
+            var tools = await _unitOfWork.ToolRepository.GetAll();
             return Ok(tools);
         }
 
-        [HttpGet("{id:int:min(1)}", Name = "GetToolById")]
-        public async Task<ActionResult<Tool>> GetToolAsync(int id)
+        [HttpGet("{id:int:min(1)}", Name = "GetTool")]
+        public ActionResult<Tool> GetTool(int id)
         {
-            var tool = await _toolService.GetById(id);
-            return Ok(tool);
+            var tool = _unitOfWork.ToolRepository.Get(t => t.ToolId == id);
+            return tool == null ? throw new Exception("ID not found") : (ActionResult<Tool>)Ok(tool);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Tool>> PostToolAsync(Tool postedTool)
+        public ActionResult<Tool> PostTool(Tool postedTool)
         {
-            var tool = await _toolService.Create(postedTool);
-            return Ok(tool);
+            var tool = _unitOfWork.ToolRepository.Create(postedTool);
+            _unitOfWork.Commit();
+            return tool != null ? (ActionResult<Tool>)Ok(tool) : throw new ArgumentNullException("Error when trying to save the entity.");
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<ActionResult<Tool>> PutToolAsync(int id, Tool modifiedTool)
+        public ActionResult<Tool> PutTool(int id, Tool modifiedTool)
         {
-            var tool = await _toolService.Update(id, modifiedTool);
-            return Ok(tool);
+            if (id != modifiedTool.ToolId)
+            {
+                return BadRequest("ID not found");
+            }
+            var tool = _unitOfWork.ToolRepository.Update(modifiedTool);
+            _unitOfWork.Commit();
+            return tool != null ? (ActionResult<Tool>)Ok(tool) : throw new ArgumentNullException("Error when trying to save the entity.");
         }
 
         [HttpDelete("{id:int:min(1)}")]
-        public async Task<ActionResult<Tool>> DepeteToolAsync(int id)
+        public ActionResult<Tool> DeleteTool(int id)
         {
-            var tool = await _toolService.Delete(id);
-            return Ok(tool);
+            var tool = _unitOfWork.ToolRepository.Get(t => t.ToolId == id);
+            if (tool == null)
+            {
+                return NotFound("ID not found");
+            }
+            var deletedTool = _unitOfWork.ToolRepository.Delete(tool);
+            _unitOfWork.Commit();
+            return Ok(deletedTool);
         }
-    }
 }
